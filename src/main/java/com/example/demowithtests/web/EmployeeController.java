@@ -4,6 +4,7 @@ import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.dto.EmployeeDto;
 import com.example.demowithtests.dto.EmployeeReadDto;
 import com.example.demowithtests.service.EmployeeService;
+import com.example.demowithtests.service.EmployeeServiceBean;
 import com.example.demowithtests.service.EmployeeServiceEM;
 import com.example.demowithtests.util.mappers.EmployeeMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -108,9 +109,10 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/users/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeEmployeeById(@PathVariable Integer id) {
-        employeeService.removeById(id);
+    @ResponseStatus(HttpStatus.OK)
+    public String softRemoveEmployeeById(@PathVariable Integer id) {
+        employeeService.softRemoveById(id);
+        return "was deleted";
     }
 
     @DeleteMapping("/users")

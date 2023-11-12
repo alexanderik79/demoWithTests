@@ -23,6 +23,8 @@ public interface EmployeeService {
 
     void removeById(Integer id);
 
+    public void softRemoveById(Integer id);
+
     void removeAll();
 
     //Page<Employee> findByCountryContaining(String country, Pageable pageable);

@@ -45,6 +45,7 @@ public class ServiceTests {
                 .email("test@mail.com")
                 .gender(Gender.M)
                 .build();
+        System.out.println(employee.getName());
     }
 
     @Test

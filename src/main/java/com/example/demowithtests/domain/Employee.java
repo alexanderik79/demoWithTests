@@ -25,6 +25,8 @@ public final class Employee {
     private String name;
 
     private String country;
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
 
     @ToLowerCase
     private String email;
