@@ -62,11 +62,14 @@ public class EmployeeServiceBean implements EmployeeService {
     @Override
     public Employee getById(Integer id) {
         var employee = employeeRepository.findById(id)
-                // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
-                .orElseThrow(ResourceNotFoundException::new);
-        /* if (employee.getIsDeleted()) {
+                 .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
+//                .orElseThrow(ResourceNotFoundException::new);
+        if (employee.getIsDeleted()==null) {
+            throw new EntityNotFoundException("Employee is cat of Schrödinger with id = " + id);
+        }
+        if (employee.getIsDeleted()) {
             throw new EntityNotFoundException("Employee was deleted with id = " + id);
-        }*/
+        }
         return employee;
     }
 
