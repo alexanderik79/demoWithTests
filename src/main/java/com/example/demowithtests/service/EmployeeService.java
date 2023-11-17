@@ -11,7 +11,12 @@ import java.util.Set;
 public interface EmployeeService {
 
     Employee create(Employee employee);
+    Employee update(Employee employee);
     void createAndSave(Employee employee);
+
+    Employee unDeleteById(Integer id);
+
+    Employee refreshNameById(Integer id, String employeeName);
 
     List<Employee> getAll();
 
@@ -23,7 +28,7 @@ public interface EmployeeService {
 
     void removeById(Integer id);
 
-    public void softRemoveById(Integer id);
+    Employee softRemoveById(Integer id);
 
     void removeAll();
 

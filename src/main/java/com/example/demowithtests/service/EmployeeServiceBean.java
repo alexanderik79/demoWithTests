@@ -37,6 +37,13 @@ public class EmployeeServiceBean implements EmployeeService {
 //        return employeeRepository.saveAndFlush(employee);
     }
 
+    @Override
+    public Employee update(Employee employee) {
+        var employeToUpdate = getById(employee.getId());
+        employeToUpdate.setName(employee.getName());
+        return employeeRepository.save(employeToUpdate);
+    }
+
     /**
      * @param employee
      * @return
@@ -45,6 +52,8 @@ public class EmployeeServiceBean implements EmployeeService {
     public void createAndSave(Employee employee) {
         employeeRepository.saveEmployee(employee.getName(), employee.getEmail(), employee.getCountry(), String.valueOf(employee.getGender()));
     }
+
+
 
     @Override
     public List<Employee> getAll() {
@@ -85,18 +94,38 @@ public class EmployeeServiceBean implements EmployeeService {
                 .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
     }
 
+
+
     @Override
     public void removeById(Integer id) {
         employeeRepository.deleteById(id);
     }
 
     @Override
-    public void softRemoveById(Integer id) {
+    public Employee softRemoveById(Integer id) {
         var employee = employeeRepository.findById(id)
                  .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
         employee.setIsDeleted(true);
         employeeRepository.save(employee);
-        System.out.println("!!!!!!!!!!!!!!!!");
+        return employee;
+    }
+
+    @Override
+    public Employee unDeleteById(Integer id) {
+        var employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
+        employee.setIsDeleted(false);
+        employeeRepository.save(employee);
+        return employee;
+    }
+
+    @Override
+    public Employee refreshNameById(Integer id, String employeeName) {
+        var employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
+        employee.setName(employeeName);
+        employeeRepository.save(employee);
+        return employee;
     }
 
     @Override

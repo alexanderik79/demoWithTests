@@ -1,10 +1,8 @@
 package com.example.demowithtests.web;
 
 import com.example.demowithtests.domain.Employee;
-import com.example.demowithtests.dto.EmployeeDto;
-import com.example.demowithtests.dto.EmployeeReadDto;
+import com.example.demowithtests.dto.*;
 import com.example.demowithtests.service.EmployeeService;
-import com.example.demowithtests.service.EmployeeServiceBean;
 import com.example.demowithtests.service.EmployeeServiceEM;
 import com.example.demowithtests.util.mappers.EmployeeMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -56,11 +54,11 @@ public class EmployeeController {
 
     @PostMapping("/users/jpa")
     @ResponseStatus(HttpStatus.CREATED)
-    public Employee saveEmployee(@RequestBody Employee employee) {
+    public EmployeeDto saveEmployee(@RequestBody Employee employee) {
         log.debug("saveEmployeeWithJpa() - start: employee = {}", employee);
-        Employee saved = employeeServiceEM.createWithJpa(employee);
+        var dto = employeeMapper.toEmployeeDto(employeeService.create(employee));
         log.debug("saveEmployeeWithJpa() - stop: employee = {}", employee.getId());
-        return saved;
+        return dto;
     }
 
     @GetMapping("/users")
@@ -108,11 +106,18 @@ public class EmployeeController {
         return dto;
     }
 
+    @PutMapping("/userundelete/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeeUnDeleteDto unDeleteEmployee(@PathVariable("id") Integer id) {
+        EmployeeUnDeleteDto dto = employeeMapper.toEmployeeUnDeleteDto(employeeService.unDeleteById(id));
+        return dto;
+    }
+
     @DeleteMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String softRemoveEmployeeById(@PathVariable Integer id) {
-        employeeService.softRemoveById(id);
-        return "was deleted";
+    public EmployeeDeleteDto softRemoveEmployeeById(@PathVariable Integer id) {
+        EmployeeDeleteDto dto = employeeMapper.toEmployeeDeleteDto(employeeService.softRemoveById(id));
+        return dto;
     }
 
     @DeleteMapping("/users")
@@ -172,12 +177,22 @@ public class EmployeeController {
         return employees;
     }
 
+    // body with text
     @PatchMapping("/users/names/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void refreshEmployeeName(@PathVariable("id") Integer id, @RequestParam String employeeName) {
+    public EmployeeRefreshNameDto refreshEmployeeName(@PathVariable("id") Integer id, @RequestBody String employeeName) {
         log.debug("refreshEmployeeName() EmployeeController - start: id = {}", id);
-        employeeService.updateEmployeeByName(employeeName, id);
+        EmployeeRefreshNameDto dto = employeeMapper.toEmployeeRefreshNameDto(employeeService.refreshNameById(id, employeeName ));
         log.debug("refreshEmployeeName() EmployeeController - end: ");
+        return dto;
+    }
+
+    // body with json
+    @PatchMapping("/users/names/body2/")
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeeDto refreshEmployeeNameBody(@RequestBody Employee employee) {
+        var dto = employeeMapper.toEmployeeDto(employeeService.update(employee));
+        return dto;
     }
 
     @PatchMapping("/users/names/body/{id}")
