@@ -73,4 +73,14 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     @Query(value = "UPDATE users SET name = ?1, email = ?2, country = ?3 WHERE id = ?4", nativeQuery = true)
     Integer updateEmployee(String name, String email, String country, Integer id);
 
+    @Transactional
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query(value = "UPDATE users SET is_deleted = false", nativeQuery = true)
+    int undeleteAllAndReturnCount();
+
+
+    @Transactional
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query(value = "UPDATE users SET is_deleted = true WHERE country = 'Russian Federation'", nativeQuery = true)
+    int deleteAllRussians();
 }

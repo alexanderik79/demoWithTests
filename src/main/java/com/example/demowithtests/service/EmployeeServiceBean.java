@@ -258,5 +258,15 @@ public class EmployeeServiceBean implements EmployeeService {
         employeeRepository.updateEmployeeByName(name, id);
     }
 
+    @Override
+    public int undeleteAll() {
+        return employeeRepository.undeleteAllAndReturnCount();
+    }
+
+    @Override
+    public int deleteAllRussians() {
+        return employeeRepository.deleteAllRussians();
+    }
+
 
 }

@@ -68,4 +68,7 @@ public interface EmployeeService {
 
     void updateEmployeeByName(String name, Integer id);
 
+    int undeleteAll();
+
+    int deleteAllRussians();
 }

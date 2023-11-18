@@ -4,6 +4,7 @@ import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.dto.*;
 import com.example.demowithtests.service.EmployeeService;
 import com.example.demowithtests.service.EmployeeServiceEM;
+import com.example.demowithtests.service.emailSevice.EmailSenderService;
 import com.example.demowithtests.util.mappers.EmployeeMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,6 +36,7 @@ public class EmployeeController {
     private final EmployeeService employeeService;
     private final EmployeeServiceEM employeeServiceEM;
     private final EmployeeMapper employeeMapper;
+    private final EmailSenderService emailSenderService;
 
     @PostMapping(USER_ENDPOINT)
     @ResponseStatus(HttpStatus.CREATED)
@@ -211,4 +213,28 @@ public class EmployeeController {
         employeeService.createAndSave(employee);
         return "employee with name: " + employee.getName() + " saved!";
     }
+
+
+    @PatchMapping("/undeleteall")
+    @ResponseStatus(HttpStatus.OK)
+    public String undeleteAllPatch() {
+        return "Recovered "+employeeService.undeleteAll()+" employees";
+    }
+    @PutMapping("/undeleteall")
+    @ResponseStatus(HttpStatus.OK)
+    public String undeleteAllPut() {
+        return "Recovered "+employeeService.undeleteAll()+" employees";
+    }
+
+    @PatchMapping("/deleteallrus")
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteAllRussiansPatch() {
+        return "Deleted "+employeeService.deleteAllRussians()+" rus employees";
+    }
+    @PutMapping("/deleteallrus")
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteAllRussiansPut() {
+        return "Deleted "+employeeService.deleteAllRussians()+" rus employees";
+    }
+
 }
