@@ -71,4 +71,9 @@ public interface EmployeeService {
     int undeleteAll();
 
     int deleteAllRussians();
+
+    String countEmployeeByCountrySQL(String country);
+    String countEmployeeByGenderSQL(String gender);
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.demowithtests.service;
 
 import com.example.demowithtests.domain.Employee;
+import com.example.demowithtests.domain.Gender;
 import com.example.demowithtests.repository.EmployeeRepository;
 import com.example.demowithtests.service.emailSevice.EmailSenderService;
 import com.example.demowithtests.util.annotations.entity.ActivateCustomAnnotations;
@@ -268,5 +269,14 @@ public class EmployeeServiceBean implements EmployeeService {
         return employeeRepository.deleteAllRussians();
     }
 
+    @Override
+    public String countEmployeeByCountrySQL(String country) {
+        return "quantity employees from "+country+": "+employeeRepository.countEmployeeByCountrySQL(country);
+    }
+
+    @Override
+    public String countEmployeeByGenderSQL(String genderStr) {
+        return "quantity employees gender "+genderStr+": "+employeeRepository.countEmployeeByGenderSQL(genderStr);
+    }
 
 }

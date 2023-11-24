@@ -237,4 +237,15 @@ public class EmployeeController {
         return "Deleted "+employeeService.deleteAllRussians()+" rus employees";
     }
 
+    @GetMapping("/countnatSQL/{country}")
+    @ResponseStatus(HttpStatus.OK)
+    public String countEmployeeByCountrySQL(@PathVariable String country) {
+        return employeeService.countEmployeeByCountrySQL(country);
+    }
+
+    @GetMapping("/countsexSQL/{gender}")
+    @ResponseStatus(HttpStatus.OK)
+    public String countEmployeeByGenderSQL(@PathVariable String gender) {
+        return employeeService.countEmployeeByGenderSQL(gender);
+    }
 }
