@@ -1,13 +1,12 @@
 package com.example.demowithtests.service;
 
 import com.example.demowithtests.domain.Employee;
+import com.example.demowithtests.domain.Gender;
 import com.example.demowithtests.repository.EmployeeRepository;
 import com.example.demowithtests.service.emailSevice.EmailSenderService;
 import com.example.demowithtests.util.annotations.entity.ActivateCustomAnnotations;
 import com.example.demowithtests.util.annotations.entity.Name;
 import com.example.demowithtests.util.annotations.entity.ToLowerCase;
-import com.example.demowithtests.util.exception.ResourceNotFoundException;
-import com.example.demowithtests.util.exception.ResourceWasDeletedException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -268,5 +267,15 @@ public class EmployeeServiceBean implements EmployeeService {
         return employeeRepository.deleteAllRussians();
     }
 
+    @Override
+    public String countEmployeeByCountryJPQL(String country) {
+        return "quantity employees from "+country+": "+employeeRepository.countEmployeeByCountryJPQL(country);
+    }
+
+    @Override
+    public String countEmployeeByGenderJPQL(String genderStr) {
+        Gender gender = "Male".equals(genderStr) ? Gender.Male : Gender.Female;
+        return "quantity employees gender "+gender+": "+employeeRepository.countEmployeeByGenderJPQL(gender);
+    }
 
 }

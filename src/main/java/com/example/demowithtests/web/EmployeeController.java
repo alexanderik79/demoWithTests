@@ -1,6 +1,7 @@
 package com.example.demowithtests.web;
 
 import com.example.demowithtests.domain.Employee;
+import com.example.demowithtests.domain.Gender;
 import com.example.demowithtests.dto.*;
 import com.example.demowithtests.service.EmployeeService;
 import com.example.demowithtests.service.EmployeeServiceEM;
@@ -236,5 +237,19 @@ public class EmployeeController {
     public String deleteAllRussiansPut() {
         return "Deleted "+employeeService.deleteAllRussians()+" rus employees";
     }
+
+    @GetMapping("/countnat/{country}")
+    @ResponseStatus(HttpStatus.OK)
+    public String countEmployeeByCountryJPQL(@PathVariable String country) {
+        return employeeService.countEmployeeByCountryJPQL(country);
+    }
+
+    @GetMapping("/countsex/{gender}")
+    @ResponseStatus(HttpStatus.OK)
+    public String countEmployeeByGenderJPQL(@PathVariable String gender) {
+        return employeeService.countEmployeeByGenderJPQL(gender);
+    }
+
+
 
 }
