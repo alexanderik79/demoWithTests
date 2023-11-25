@@ -1,6 +1,7 @@
 package com.example.demowithtests.repository;
 
 import com.example.demowithtests.domain.Employee;
+import com.example.demowithtests.domain.Gender;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,4 +85,16 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query(value = "UPDATE users SET is_deleted = true WHERE country = 'Russian Federation'", nativeQuery = true)
     int deleteAllRussians();
+
+    @Query("SELECT COUNT(e) FROM Employee e WHERE " +
+            "e.country = :country AND " +
+            "e.isDeleted = false ")
+    Integer countEmployeeByCountryJPQL(@Param("country") String country);
+
+    @Query("SELECT COUNT(e) FROM Employee e WHERE " +
+            "e.gender = :gender AND " +
+            "e.isDeleted = false ")
+    Integer countEmployeeByGenderJPQL(@Param("gender") Gender gender);
+
+
 }
