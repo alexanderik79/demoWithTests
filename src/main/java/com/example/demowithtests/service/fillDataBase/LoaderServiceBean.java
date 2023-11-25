@@ -2,6 +2,7 @@ package com.example.demowithtests.service.fillDataBase;
 
 import com.example.demowithtests.domain.Address;
 import com.example.demowithtests.domain.Employee;
+import com.example.demowithtests.domain.Gender;
 import com.example.demowithtests.repository.EmployeeRepository;
 import com.github.javafaker.Faker;
 import lombok.AllArgsConstructor;
@@ -45,6 +46,7 @@ public class LoaderServiceBean implements LoaderService {
             String name = faker.name().name();
             String country = faker.country().name();
             String email = faker.name().name();
+            Gender gender = Gender.valueOf(faker.demographic().sex());
 
             Set<Address> addresses = Set.copyOf(Arrays.asList(new Address(), new Address()));
 
@@ -53,6 +55,7 @@ public class LoaderServiceBean implements LoaderService {
                     .name(name)
                     .country(country)
                     .email(email.toLowerCase().replaceAll(" ", "") + "@mail.com")
+                    .gender(gender)
                     .addresses(addresses)
                     .build();
 
