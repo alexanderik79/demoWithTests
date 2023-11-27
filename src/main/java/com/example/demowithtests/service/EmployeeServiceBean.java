@@ -49,10 +49,9 @@ public class EmployeeServiceBean implements EmployeeService {
      */
     @Override
     public void createAndSave(Employee employee) {
+        System.out.println("controller");
         employeeRepository.saveEmployee(employee.getName(), employee.getEmail(), employee.getCountry(), String.valueOf(employee.getGender()));
     }
-
-
 
     @Override
     public List<Employee> getAll() {

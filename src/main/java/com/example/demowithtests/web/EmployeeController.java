@@ -6,6 +6,7 @@ import com.example.demowithtests.dto.*;
 import com.example.demowithtests.service.EmployeeService;
 import com.example.demowithtests.service.EmployeeServiceEM;
 import com.example.demowithtests.service.emailSevice.EmailSenderService;
+import com.example.demowithtests.util.exception.InvalidGenderException;
 import com.example.demowithtests.util.mappers.EmployeeMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -48,11 +49,18 @@ public class EmployeeController {
             @ApiResponse(responseCode = "404", description = "NOT FOUND. Specified employee request not found."),
             @ApiResponse(responseCode = "409", description = "Employee already exists")})
     public EmployeeDto saveEmployee(@RequestBody @Valid EmployeeDto requestForSave) {
+        if (!isValidGender(requestForSave.gender())) {
+            throw new InvalidGenderException(requestForSave.gender());
+        }
         log.debug("saveEmployee() - start: requestForSave = {}", requestForSave.name());
         var employee = employeeMapper.toEmployee(requestForSave);
         var dto = employeeMapper.toEmployeeDto(employeeService.create(employee));
         log.debug("saveEmployee() - stop: dto = {}", dto.name());
         return dto;
+    }
+
+    private boolean isValidGender(String gender) {
+        return gender != null && (gender.equals("Male") || gender.equals("Female"));
     }
 
     @PostMapping("/users/jpa")
@@ -211,7 +219,9 @@ public class EmployeeController {
     @PostMapping("/employees")
     @ResponseStatus(HttpStatus.CREATED)
     public String createAndSave(@RequestBody Employee employee) {
+
         employeeService.createAndSave(employee);
+        System.out.println("controller");
         return "employee with name: " + employee.getName() + " saved!";
     }
 

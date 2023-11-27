@@ -2,6 +2,8 @@ package com.example.demowithtests.dto;
 
 import com.example.demowithtests.domain.Gender;
 import com.example.demowithtests.util.annotations.dto.BlockedEmailDomains;
+import com.example.demowithtests.util.annotations.dto.CountryNameRightFormed;
+import com.example.demowithtests.util.annotations.dto.GenderRightFormed;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -24,6 +26,7 @@ public record EmployeeDto(
         @Schema(description = "Name of an employee.", example = "Billy", requiredMode = Schema.RequiredMode.REQUIRED)
         String name,
 
+        @CountryNameRightFormed
         @Schema(description = "Name of the country.", example = "England", requiredMode = Schema.RequiredMode.REQUIRED)
         String country,
 
@@ -37,7 +40,8 @@ public record EmployeeDto(
         @Schema(description = "Date response")
         Date startDate,
 
-        Gender gender,
+
+        String gender,
 
         @Valid
         Set<AddressDto> addresses) {
@@ -47,7 +51,7 @@ public record EmployeeDto(
                        String country,
                        String email,
                        Date startDate,
-                       Gender gender,
+                       String gender,
                        Set<AddressDto> addresses) {
 
         this.id = id;
