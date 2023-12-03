@@ -18,10 +18,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Employee Service Tests")
@@ -43,7 +42,8 @@ public class ServiceTests {
                 .name("Mark")
                 .country("UK")
                 .email("test@mail.com")
-                .gender(Gender.M)
+                .gender(Gender.Male)
+                .isDeleted(false)
                 .build();
         System.out.println(employee.getName());
     }
@@ -63,7 +63,8 @@ public class ServiceTests {
     public void whenGivenId_shouldReturnEmployee_ifFound() {
 
         Employee employee = new Employee();
-        employee.setId(88);
+        employee.setId(1);
+        employee.setIsDeleted(false);
         when(employeeRepository.findById(employee.getId())).thenReturn(Optional.of(employee));
         Employee expected = service.getById(employee.getId());
         assertThat(expected).isSameAs(employee);
@@ -98,12 +99,32 @@ public class ServiceTests {
         verify(employeeRepository).findAll();
     }
 
+
+
     @Test
     @DisplayName("Delete employee test")
     public void deleteEmployeeTest() {
-
-        when(employeeRepository.findById(employee.getId())).thenReturn(Optional.of(employee));
         service.removeById(employee.getId());
-        verify(employeeRepository).delete(employee);
+        verify(employeeRepository).deleteById(employee.getId());
     }
+
+    @Test
+    @DisplayName("Soft Remove employee test")
+    public void testSoftRemoveById() {
+        // Arrange
+        Integer employeeId = 1;
+        Employee mockEmployee = new Employee();
+        mockEmployee.setId(employeeId);
+
+        when(employeeRepository.findById(employeeId)).thenReturn(Optional.of(mockEmployee));
+        when(employeeRepository.save(any(Employee.class))).thenReturn(mockEmployee);
+
+        Employee result = service.softRemoveById(employeeId);
+
+        assertNotNull(result);
+        assertTrue(result.getIsDeleted());
+        verify(employeeRepository, times(1)).findById(employeeId);
+        verify(employeeRepository, times(1)).save(mockEmployee);
+    }
+
 }

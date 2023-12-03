@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.HashSet;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -38,7 +40,7 @@ public class RepositoryTests {
                                 .builder()
                                 .country("UK")
                                 .build())))
-                .gender(Gender.M)
+                .gender(Gender.Male)
                 .build();
 
         employeeRepository.save(employee);
@@ -90,9 +92,9 @@ public class RepositoryTests {
     @DisplayName("Find employee by gender test")
     public void findByGenderTest() {
 
-        var employees = employeeRepository.findByGender(Gender.M.toString(), "UK");
+        var employees = employeeRepository.findByGender(Gender.Male.toString(), "UK");
 
-        assertThat(employees.get(0).getGender()).isEqualTo(Gender.M);
+        assertThat(employees.get(0).getGender()).isEqualTo(Gender.Male);
     }
 
     @Test
@@ -114,6 +116,21 @@ public class RepositoryTests {
         }
 
         Assertions.assertThat(employeeNull).isNull();
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("Delete all rus employees test")
+    public void testDeleteAllRussians() {
+
+        Employee russianEmployee = new Employee();
+        russianEmployee.setCountry("Russian Federation");
+        russianEmployee.setIsDeleted(false);
+        employeeRepository.save(russianEmployee);
+
+        int deletedCount = employeeRepository.deleteAllRussians();
+
+        assertEquals(1, deletedCount);
     }
 
 }

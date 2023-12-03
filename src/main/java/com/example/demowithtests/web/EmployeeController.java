@@ -225,7 +225,6 @@ public class EmployeeController {
         return "employee with name: " + employee.getName() + " saved!";
     }
 
-
     @PatchMapping("/undeleteall")
     @ResponseStatus(HttpStatus.OK)
     public String undeleteAllPatch() {
@@ -259,7 +258,4 @@ public class EmployeeController {
     public String countEmployeeByGenderJPQL(@PathVariable String gender) {
         return employeeService.countEmployeeByGenderJPQL(gender);
     }
-
-
-
 }

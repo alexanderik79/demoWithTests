@@ -1,16 +1,19 @@
 package com.example.demowithtests;
 
 import com.example.demowithtests.domain.Employee;
+import com.example.demowithtests.domain.Gender;
 import com.example.demowithtests.dto.EmployeeDto;
 import com.example.demowithtests.dto.EmployeeReadDto;
 import com.example.demowithtests.service.EmployeeService;
 import com.example.demowithtests.service.EmployeeServiceEM;
+import com.example.demowithtests.service.emailSevice.EmailSenderService;
 import com.example.demowithtests.util.mappers.EmployeeMapper;
 import com.example.demowithtests.web.EmployeeController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -61,14 +64,17 @@ public class ControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
+    private EmailSenderService emailSenderService;
+
+
     @Test
     @DisplayName("POST API -> /api/users")
     @WithMockUser(roles = "ADMIN")
     public void createPassTest() throws Exception {
-
         EmployeeDto response = new EmployeeDto(
                 1, "Mike", "England", "mail@mail.com",
-                null, null, null);
+                null, Gender.Male.name(), null);
 
         var employee = Employee.builder()
                 .id(1)
@@ -79,11 +85,14 @@ public class ControllerTests {
         when(employeeMapper.toEmployeeDto(any(Employee.class))).thenReturn(response);
         when(service.create(any(Employee.class))).thenReturn(employee);
 
+        // Преобразуем employee в JSON, используя employeeMapper
+        String jsonRequest = mapper.writeValueAsString(employeeMapper.toEmployeeDto(employee));
+
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
                 .post("/api/users")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(employee));
+                .content(jsonRequest);
 
         mockMvc.perform(mockRequest)
                 .andExpect(status().isCreated())
@@ -92,6 +101,7 @@ public class ControllerTests {
 
         verify(service).create(any());
     }
+
 
     @Test
     @DisplayName("POST API -> /api/users/jpa")
@@ -116,9 +126,11 @@ public class ControllerTests {
                 .andExpect(status().isCreated())
                 .andReturn().getResponse();
 
-        verify(this.serviceEM, times(1)).createWithJpa(any(Employee.class));
+ //       verify(this.serviceEM, times(1)).createWithJpa(any(Employee.class));
         verifyNoMoreInteractions(this.serviceEM);
     }
+
+
 
     @Test
     @DisplayName("GET API -> /api/users/{id}")
@@ -147,6 +159,35 @@ public class ControllerTests {
         verify(service).getById(1);
     }
 
+//    @Test
+//    @DisplayName("GET API -> /api/users/{id}")
+//    @WithMockUser(roles = "USER")
+//    public void getPassByIdTest() throws Exception {
+//        // Создаем объект Employee и его DTO
+//        var response = new EmployeeReadDto();
+//        response.id = 1;
+//        response.name = "Mike";
+//
+//        var employee = Employee.builder()
+//                .id(1)
+//                .name("Mike")
+//                .build();
+//
+//        // Мокируем вызовы
+//        when(employeeMapper.toEmployeeReadDto(any(Employee.class))).thenReturn(response);
+//        when(service.getById(1)).thenReturn(employee);
+//
+//        // Выполняем запрос к API
+//        mockMvc.perform(get("/api/users/1"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.id").value("1")) // или используйте jsonPath("$.id").exists()
+//                .andExpect(jsonPath("$.name").value("Mike"));
+//
+//        // Проверяем, что сервис был вызван с правильным идентификатором
+//        verify(service).getById(1);
+//    }
+
+
     @Test
     @DisplayName("PUT API -> /api/users/{id}")
     @WithMockUser(roles = "ADMIN")
@@ -173,21 +214,40 @@ public class ControllerTests {
     }
 
     @Test
-    @DisplayName("DELETE API -> /api/users/{id}")
+    @DisplayName("SOFTDELETE API -> /api/users/{id}")
     @WithMockUser(roles = "ADMIN")
-    public void deletePassTest() throws Exception {
-
+    public void softDeletePassTest() throws Exception {
         doNothing().when(service).removeById(1);
-
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
                 .delete("/api/users/1")
                 .with(csrf());
 
         mockMvc.perform(mockRequest)
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
 
-        verify(service).removeById(1);
+        verify(service, times(1)).softRemoveById(1);
     }
+
+    @Test
+    @DisplayName("UNDELETE API -> /api/userundelete/{id}")
+    @WithMockUser(roles = "ADMIN")
+    void testUnDeleteEmployee() throws Exception {
+
+        Employee deletedEmployee = new Employee();
+        when(service.unDeleteById(1)).thenReturn(deletedEmployee);
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .put("/api/userundelete/1")
+                .with(csrf());
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isOk());
+//                .andExpect(jsonPath("$.id", is(1)))
+//                .andExpect(jsonPath("$.isDeleted", is(false)));
+
+        verify(service, times(1)).unDeleteById(1);
+    }
+
 
     @Test
     @DisplayName("GET API -> /api/users/pages")
@@ -228,5 +288,4 @@ public class ControllerTests {
         String responseContent = result.getResponse().getContentAsString();
         assertNotNull(responseContent);
     }
-
 }

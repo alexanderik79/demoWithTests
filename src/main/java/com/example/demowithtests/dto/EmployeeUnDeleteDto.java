@@ -10,17 +10,17 @@ public record EmployeeUnDeleteDto(
 
     @Schema(description = "Id in DB")
     Integer id,
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "Date response")
-    Date unDeleteDate,
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+//    @Schema(description = "Date response")
+//    Date unDeleteDate,
 
     Boolean isDeleted)
 
 
  {
-    public EmployeeUnDeleteDto(Integer id, Date unDeleteDate, Boolean isDeleted){
+    public EmployeeUnDeleteDto(Integer id, Boolean isDeleted){
             this.id = id;
-            this.unDeleteDate = unDeleteDate != null ? unDeleteDate : Date.from(Instant.now());
+//            this.unDeleteDate = unDeleteDate != null ? unDeleteDate : Date.from(Instant.now());
             this.isDeleted = isDeleted;
         }
  }

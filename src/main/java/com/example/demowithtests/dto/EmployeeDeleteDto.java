@@ -10,13 +10,17 @@ public record EmployeeDeleteDto(
 
     @Schema(description = "Id in DB")
     Integer id,
+
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Schema(description = "Date response")
     Date deleteDate)
 
+
  {
     public EmployeeDeleteDto(Integer id, Date deleteDate){
             this.id = id;
+
             this.deleteDate = deleteDate != null ? deleteDate : Date.from(Instant.now());
         }
  }
