@@ -1,0 +1,8 @@
+
+databaseChangeLog:
+  - include:
+      file: classpath:db/changelog/changeset/create-users.yml
+  - include:
+      file: classpath:db/changelog/changeset/create-addresses.yml
+  - include:
+      file: classpath:db/changelog/changeset/create-documents.yml
