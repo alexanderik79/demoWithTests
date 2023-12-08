@@ -30,6 +30,3 @@ databaseChangeLog:
               - column:
                   name: document_id
                   type: INTEGER
-              - column:
-                  name: employee_id
-                  type: INTEGER

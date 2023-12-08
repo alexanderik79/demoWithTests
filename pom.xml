@@ -31,15 +31,11 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
+
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <version>${liquibase.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.liquibase.ext</groupId>
-            <artifactId>liquibase-hibernate5</artifactId>
-            <version>${liquibase.version}</version>
+            <version>4.25.0</version>
         </dependency>
 
         <!-- spring-boot-starter-web -->
