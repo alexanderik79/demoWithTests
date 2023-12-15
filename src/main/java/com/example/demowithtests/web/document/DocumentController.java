@@ -37,4 +37,12 @@ public class DocumentController implements DocumentResource {
     public Document getDocumentById(@PathVariable Integer id) {
         return documentService.getById(id);
     }
+
+    @Override
+    @PostMapping("/documents/{id}")
+    public Document addNewDocument(@RequestBody Document document, @PathVariable Integer id) {
+        return documentService.addNewDocument(document, id);
+    }
+
+
 }

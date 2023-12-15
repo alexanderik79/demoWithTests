@@ -39,7 +39,11 @@ public final class Employee {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @OneToOne  (cascade = CascadeType.ALL)
-    @JoinColumn(name = "document_id", referencedColumnName = "id")
-    private Document document;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "employee_id")
+    private Set<Document> documents = new HashSet<>();
+
+//    @OneToOne  (cascade = CascadeType.ALL)
+//    @JoinColumn(name = "document_id", referencedColumnName = "id")
+//    private Document document;
 }

@@ -12,7 +12,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "documents")
-public final class Document {
+public class Document {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,14 +24,22 @@ public final class Document {
     @Builder.Default
     private String uuid = UUID.randomUUID().toString();
 
+    private Boolean isActive;
+
+    private LocalDateTime dateOfIssue;
+
     private LocalDateTime expireDate;
 
     @Builder.Default
     private Boolean isHandled = Boolean.FALSE;
 
-    @ToString.Exclude
-    @OneToOne(mappedBy = "document")
+    @ManyToOne
     private Employee employee;
+
+//
+//    @ToString.Exclude
+//    @OneToOne(mappedBy = "document")
+//    private Employee employee;
 
     /*@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")

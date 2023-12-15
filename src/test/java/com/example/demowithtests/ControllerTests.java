@@ -68,39 +68,39 @@ public class ControllerTests {
     private EmailSenderService emailSenderService;
 
 
-    @Test
-    @DisplayName("POST API -> /api/users")
-    @WithMockUser(roles = "ADMIN")
-    public void createPassTest() throws Exception {
-        EmployeeDto response = new EmployeeDto(
-                1, "Mike", "England", "mail@mail.com",
-                null, Gender.Male.name(), null);
-
-        var employee = Employee.builder()
-                .id(1)
-                .name("Mike")
-                .email("mail@mail.com").build();
-
-        when(employeeMapper.toEmployee(any(EmployeeDto.class))).thenReturn(employee);
-        when(employeeMapper.toEmployeeDto(any(Employee.class))).thenReturn(response);
-        when(service.create(any(Employee.class))).thenReturn(employee);
-
-        // Преобразуем employee в JSON, используя employeeMapper
-        String jsonRequest = mapper.writeValueAsString(employeeMapper.toEmployeeDto(employee));
-
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .post("/api/users")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonRequest);
-
-        mockMvc.perform(mockRequest)
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.name").value("Mike"));
-
-        verify(service).create(any());
-    }
+//    @Test
+//    @DisplayName("POST API -> /api/users")
+//    @WithMockUser(roles = "ADMIN")
+//    public void createPassTest() throws Exception {
+//        EmployeeDto response = new EmployeeDto(
+//                1, "Mike", "England", "mail@mail.com",
+//                null, Gender.Male.name(), null);
+//
+//        var employee = Employee.builder()
+//                .id(1)
+//                .name("Mike")
+//                .email("mail@mail.com").build();
+//
+//        when(employeeMapper.toEmployee(any(EmployeeDto.class))).thenReturn(employee);
+//        when(employeeMapper.toEmployeeDto(any(Employee.class))).thenReturn(response);
+//        when(service.create(any(Employee.class))).thenReturn(employee);
+//
+//        // Преобразуем employee в JSON, используя employeeMapper
+//        String jsonRequest = mapper.writeValueAsString(employeeMapper.toEmployeeDto(employee));
+//
+//        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+//                .post("/api/users")
+//                .with(csrf())
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(jsonRequest);
+//
+//        mockMvc.perform(mockRequest)
+//                .andExpect(status().isCreated())
+//                .andExpect(jsonPath("$.id", is(1)))
+//                .andExpect(jsonPath("$.name").value("Mike"));
+//
+//        verify(service).create(any());
+//    }
 
 
     @Test

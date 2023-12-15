@@ -13,12 +13,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
+
+    Employee findFirstById(Integer id);
 
     @Query(value = "select e from Employee e where e.country =?1")
     @EntityGraph(attributePaths = {"addresses"})
