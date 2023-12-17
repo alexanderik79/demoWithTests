@@ -33,8 +33,11 @@ public class Document {
     @Builder.Default
     private Boolean isHandled = Boolean.FALSE;
 
+    @ToString.Exclude
     @ManyToOne
+    @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
+
 
 //
 //    @ToString.Exclude
